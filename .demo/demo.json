@@ -1,0 +1,169 @@
+{
+  "$schema": "https://demotime.show/demo-time.schema.json",
+  "title": "Chess AI Demo",
+  "description": "Build a chess application using agentic AI agents",
+  "version": 2,
+  "demos": [
+    {
+      "id": "demo-mjbkva81-zqkt",
+      "title": "Introduction",
+      "steps": [
+        {
+          "action": "showEngageTimeSession"
+        }
+      ]
+    },
+    {
+      "title": "Starting State",
+      "steps": [
+        {
+          "action": "executeTerminalCommand",
+          "command": "./.demo/scripts/switch-phase.sh -y 1"
+        },
+        {
+          "action": "executeTerminalCommand",
+          "command": "git checkout main"
+        },
+        {
+          "action": "showEngageTimePoll",
+          "startOnOpen": true,
+          "pollId": "qvs4iw"
+        }
+      ],
+      "id": "1-starting-state",
+      "notes": {
+        "path": ".demo/notes/1-starting-state_notes.md"
+      }
+    },
+    {
+      "id": "2-installed-spec-kit",
+      "title": "Installed Spec Kit",
+      "steps": [
+        {
+          "action": "closeEngageTimePoll",
+          "pollId": "qvs4iw"
+        },
+        {
+          "action": "executeTerminalCommand",
+          "command": "./.demo/scripts/switch-phase.sh -y 2"
+        }
+      ],
+      "notes": {
+        "path": ".demo/notes/2-installed-spec-kit_notes.md"
+      }
+    },
+    {
+      "id": "3-constitution",
+      "title": "Constitution",
+      "steps": [
+        {
+          "action": "executeTerminalCommand",
+          "command": "./.demo/scripts/switch-phase.sh -y 3"
+        }
+      ],
+      "notes": {
+        "path": ".demo/notes/3-constitution_notes.md"
+      }
+    },
+    {
+      "id": "4-specify-and-plan",
+      "title": "Specify & Plan",
+      "steps": [
+        {
+          "action": "executeTerminalCommand",
+          "command": "git checkout 001-single-player-chess"
+        },
+        {
+          "action": "executeTerminalCommand",
+          "command": "./.demo/scripts/switch-phase.sh -y 4"
+        }
+      ],
+      "notes": {
+        "path": ".demo/notes/4-specify-and-plan_notes.md"
+      }
+    },
+    {
+      "id": "5-generate-tasks",
+      "title": "Generate Tasks",
+      "steps": [
+        {
+          "action": "executeTerminalCommand",
+          "command": "./.demo/scripts/switch-phase.sh -y 5"
+        }
+      ],
+      "notes": {
+        "path": ".demo/notes/5-generate-tasks_notes.md"
+      }
+    },
+    {
+      "id": "6-mvp-chess",
+      "title": "MVP Chess Game",
+      "steps": [
+        {
+          "action": "executeTerminalCommand",
+          "command": "./.demo/scripts/switch-phase.sh -y 6"
+        }
+      ],
+      "notes": {
+        "path": ".demo/notes/mvp-chess_notes.md"
+      }
+    },
+    {
+      "id": "7-manage-game-flow",
+      "title": "Manage Game Flow",
+      "steps": [
+        {
+          "action": "executeTerminalCommand",
+          "command": "./.demo/scripts/switch-phase.sh -y 7"
+        }
+      ],
+      "notes": {
+        "path": ".demo/notes/manage-game-flow_notes.md"
+      }
+    },
+    {
+      "id": "8-refine-board-interactions",
+      "title": "Refine Board Interations",
+      "steps": [
+        {
+          "action": "executeTerminalCommand",
+          "command": "./.demo/scripts/switch-phase.sh -y 8"
+        }
+      ],
+      "notes": {
+        "path": ".demo/notes/8-refine-board-interactions_notes.md"
+      }
+    },
+    {
+      "id": "9-improve-ui",
+      "title": "Improve UX / UI",
+      "steps": [
+        {
+          "action": "executeTerminalCommand",
+          "command": "./.demo/scripts/switch-phase.sh -y 9"
+        }
+      ],
+      "notes": {
+        "path": ".demo/notes/9-improve-ui_notes.md"
+      }
+    },
+    {
+      "id": "clostng",
+      "title": "Closing",
+      "steps": [
+        {
+          "action": "startEngageTimePoll",
+          "pollId": "lv7k3u"
+        },
+        {
+          "action": "showEngageTimePoll",
+          "pollId": "lv7k3u"
+        }
+      ]
+    }
+  ],
+  "engageTime": {
+    "sessionId": "bax68u"
+  },
+  "timer": 90
+}
