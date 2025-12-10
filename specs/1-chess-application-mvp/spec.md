@@ -43,6 +43,18 @@ A fully functional, locally-runnable chess game where:
 
 ---
 
+## 1.4 Clarifications (Session: 2025-12-10)
+
+This section documents specific behavior decisions clarified during specification review.
+
+- **Q1: Undo During AI Thinking** → **A:** Disable undo button entirely while AI is calculating; no queuing
+- **Q2: Pawn Promotion Dialog** → **A:** Modal dialog that blocks board interaction until piece selected
+- **Q3: Move History Display** → **A:** Show all moves including incomplete move pairs at game end (e.g., "7. Nf3" without Black response)
+- **Q4: Threefold Repetition Draw** → **A:** Automatic draw detection; game ends immediately on 3rd repetition
+- **Q5: Game Over Display** → **C:** Board visible and readonly; result message displayed below board; all controls disabled except "New Game"
+
+---
+
 ## 2. Requirements
 
 ### 2.1 Functional Requirements
@@ -74,6 +86,7 @@ A fully functional, locally-runnable chess game where:
   - Invalid moves rejected silently (piece returns to origin)
   - Pawn promotion shows piece selector (Q, R, B, N)
   - Special moves work: castling (both sides), en passant
+  - **Clarification**: Pawn promotion uses modal dialog that blocks board interaction until piece selected
 
 #### FR-004: AI Move Calculation
 - **Description**: AI calculates and executes moves using Stockfish WASM engine
@@ -93,6 +106,7 @@ A fully functional, locally-runnable chess game where:
   - Checkmate/stalemate/draw conditions detected and displayed
   - Move history shows all moves in algebraic notation
   - Captured pieces displayed
+  - **Clarification**: Game over state displays result message below board; board remains visible but readonly
 
 #### FR-006: Game Controls
 - **Description**: Players can control game flow
@@ -102,6 +116,7 @@ A fully functional, locally-runnable chess game where:
   - Resign: Concede the game
   - Flip Board: Change board perspective (view-only)
   - Buttons disabled while AI is thinking (except Flip)
+  - **Clarification**: Undo button is disabled while AI calculates; no move queueing
 
 #### FR-007: Draw Detection
 - **Description**: Application correctly identifies all draw conditions
@@ -111,6 +126,7 @@ A fully functional, locally-runnable chess game where:
   - Threefold repetition detected automatically
   - 50-move rule detected automatically
   - Draw message displayed to user
+  - **Clarification**: Threefold repetition results in automatic game end (no player claim required)
 
 ---
 
@@ -188,9 +204,9 @@ User Story: Undo moves and resign
 7. User makes different move
 8. After some moves, user is losing badly
 9. User clicks "Resign"
-10. Application displays result message
+10. Application displays result message below board
 
-Expected: Undo works correctly, resign recognized as loss
+Expected: Undo works correctly, resign recognized as loss, board stays visible
 ```
 
 ### 3.3 Difficulty Progression
@@ -389,7 +405,9 @@ MoveHistory.tsx
 - **AI_THINKING**: Disable New Game, Undo, Resign (enable Flip)
 - **PLAYER_TURN**: Enable all buttons
 - **START_SCREEN**: Enable difficulty/color, disable game controls
-- **GAME_OVER**: Enable Undo, enable New Game, disable Resign
+- **GAME_OVER**: Disable Undo, Resign, Flip; enable New Game only
+  - Board displays readonly; result message below board
+  - Buttons visually indicate game is complete
 
 ---
 
