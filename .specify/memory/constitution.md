@@ -1,3 +1,36 @@
+<!--
+## Sync Impact Report
+
+**Version Change**: 1.0.0 → 1.1.0 (MINOR bump - new principles/patterns added)
+
+### Modified Principles
+- None (existing 5 core principles unchanged)
+
+### Added Sections
+- **PRD Implementation Patterns** (new section containing 7 subsections):
+  - VI. Web Worker Communication Pattern
+  - VII. State Management Boundaries
+  - VIII. Move Validation Flow
+  - IX. Component Responsibility
+  - X. Stockfish File Handling
+  - XI. Difficulty Configuration
+  - XII. UI State Synchronization
+
+### Removed Sections
+- None
+
+### Templates Requiring Updates
+- `.specify/templates/plan-template.md`: ⚠ pending review (new patterns may inform planning)
+- `.specify/templates/spec-template.md`: ⚠ pending review (alignment check needed)
+- `.specify/templates/tasks-template.md`: ⚠ pending review (task categorization)
+
+### Follow-up TODOs
+- None - all placeholders resolved
+
+### Amendment Date
+2025-12-10
+-->
+
 # AI Chess Demo Constitution
 
 **Project**: Web-based single-player chess application with AI opponent  
@@ -44,6 +77,63 @@ All implementation must strictly follow the BRD and PRD documents:
 - Changes to game rules, UI layout, difficulty levels, or core functionality must be approved before implementation
 - If BRD/PRD needs update, amend the specification first, then implement
 - Use `#github-pull-request_copilot-coding-agent` tag with issue reference when asking for approval
+
+## Architecture Patterns
+
+### VI. Web Worker Communication (MANDATORY)
+All Stockfish engine communication must follow these patterns:
+- All Stockfish communication MUST go through the `ChessEngine` class (single point of contact)
+- Never create `Worker` instances directly in components or hooks other than `useChessEngine`
+- Worker lifecycle (`init()`/`destroy()`) managed exclusively by the `useChessEngine` hook
+- No direct `postMessage()` calls outside of `ChessEngine` class methods
+
+### VII. State Management Boundaries (MANDATORY)
+Game state ownership and flow must be strictly controlled:
+- Game state lives in `useChessGame` hook only (single source of truth)
+- Components receive state via props; components NEVER manage game logic internally
+- `chess.js` instance is private to `useChessGame`; components use derived state only (FEN, history, status)
+- No component-level `useState` for game-related data (position, turn, check status, etc.)
+- UI-only state (e.g., animation flags, hover effects) is allowed in components
+
+### VIII. Move Validation Flow (MANDATORY)
+All chess moves must follow this validation pipeline:
+- All moves MUST be validated by `chess.js` before updating any UI state
+- Never update board visuals optimistically before validation succeeds
+- UCI → SAN conversion happens in one place only: the `uciToMove()` function
+- Player moves validated via `game.move()` return value; null = invalid
+- AI moves from Stockfish are validated identically to player moves
+
+### IX. Component Responsibilities (MANDATORY)
+Each component has a single, clearly defined responsibility:
+- **`ChessBoard.tsx`**: Display only; receives position + callbacks as props; contains zero game logic
+- **`GameControls.tsx`**: Button rendering + disabled state display; no business logic; callbacks only
+- **`GameStatus.tsx`**: Display turn/check/result text; no state mutations; pure presentational
+- **`MoveHistory.tsx`**: Display PGN move list; no game manipulation; receives history as prop
+- **`DifficultySelector.tsx`**: Render difficulty options; disabled state from props; selection via callback
+- If a component needs game logic, it belongs in `useChessGame` hook, not the component
+
+### X. Stockfish File Handling (NON-NEGOTIABLE)
+Engine files must be handled exactly as specified:
+- Stockfish files MUST reside in `/public/stockfish/` directory (never processed by bundler)
+- Worker instantiation MUST use absolute path: `new Worker('/stockfish/stockfish-nnue-17.1-lite-single.js')`
+- No dynamic path construction for engine files (no template literals, no environment variables)
+- If Stockfish version changes, update path in `ChessEngine` class AND copy new files to `/public/stockfish/`
+
+### XI. Difficulty Configuration (MANDATORY)
+Difficulty settings must be centralized and consistent:
+- All difficulty settings defined in single source: `DIFFICULTY_SETTINGS` constant in `engine.ts` or `difficulty.ts`
+- No hardcoded skill levels, depths, or ELO values outside the central configuration
+- Components display difficulty names; only `ChessEngine` knows UCI option values
+- Any changes to ELO mapping require PRD amendment first, then code update
+
+### XII. UI State Synchronization (MANDATORY)
+Interactive element states must be derived from game status:
+- Button disabled states derived from `GameStatus` enum only (e.g., `status === 'aiThinking'`)
+- No independent `isDisabled` state tracking in button components
+- `AI_THINKING` status controls disabled state for: New Game, Undo, Resign buttons
+- `Flip Board` button always enabled (view-only, doesn't affect game state)
+- `START_SCREEN` status disables gameplay buttons; enables settings controls
+- `GAME_OVER` status: Undo enabled, Resign disabled, New Game enabled
 
 ## Code Quality Standards
 
@@ -114,4 +204,4 @@ Before shipping code:
 - **MINOR**: New principle added, guidance expanded
 - **PATCH**: Clarification, wording fixes, examples added
 
-**Version**: 1.0.0 | **Ratified**: 2025-12-10 | **Last Amended**: 2025-12-10
+**Version**: 1.1.0 | **Ratified**: 2025-12-10 | **Last Amended**: 2025-12-10
