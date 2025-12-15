@@ -8,9 +8,10 @@ interface ChessBoardProps {
   gameState: GameState
   onMove: (from: Square, to: Square, promotion?: 'q' | 'r' | 'b' | 'n') => void
   getLegalMoves: (square?: Square) => Square[]
+  boardFlipped?: boolean
 }
 
-export function ChessBoard({ gameState, onMove, getLegalMoves }: ChessBoardProps) {
+export function ChessBoard({ gameState, onMove, getLegalMoves, boardFlipped = false }: ChessBoardProps) {
   const [selectedSquare, setSelectedSquare] = useState<Square | null>(null)
   const [pendingPromotion, setPendingPromotion] = useState<{
     from: Square
@@ -108,7 +109,7 @@ export function ChessBoard({ gameState, onMove, getLegalMoves }: ChessBoardProps
           id: 'chessboard',
           position: gameState.fen,
           onPieceDrop: handlePieceDrop,
-          boardOrientation: gameState.playerColor === 'w' ? 'white' : 'black',
+          boardOrientation: boardFlipped ? (gameState.playerColor === 'w' ? 'black' : 'white') : (gameState.playerColor === 'w' ? 'white' : 'black'),
           squareStyles: customSquareStyles,
           boardStyle: {
             borderRadius: '4px',
