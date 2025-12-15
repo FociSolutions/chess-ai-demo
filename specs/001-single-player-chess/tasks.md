@@ -26,16 +26,16 @@ Based on plan.md structure:
 
 **Purpose**: Create project structure and install dependencies
 
-- [ ] T001 Create Vite React TypeScript project with `npm create vite@latest chess-app -- --template react-ts`
-- [ ] T002 Install runtime dependencies: `npm install chess.js react-chessboard stockfish` in chess-app/
-- [ ] T003 Install dev dependencies: `npm install -D tailwindcss postcss autoprefixer @testing-library/react @testing-library/jest-dom vitest jsdom @types/node` in chess-app/
-- [ ] T004 [P] Configure Tailwind CSS with `npx tailwindcss init -p` and update chess-app/tailwind.config.js
-- [ ] T005 [P] Configure Vitest in chess-app/vite.config.ts with jsdom environment and test setup
-- [ ] T006 [P] Create test setup file in chess-app/tests/setup.ts with Testing Library configuration
-- [ ] T007 Copy Stockfish WASM files to chess-app/public/stockfish/ directory (stockfish-nnue-17.1-lite-single.js and .wasm)
-- [ ] T008 [P] Create TypeScript types file in chess-app/src/types/chess.ts with GameState, Move, Settings, Difficulty, AIOpponent interfaces
-- [ ] T009 [P] Update chess-app/src/index.css with Tailwind directives and base styles
-- [ ] T010 Create project folder structure: chess-app/src/{components,hooks,lib}/ and chess-app/tests/{unit,integration}/
+- [X] T001 Create Vite React TypeScript project with `npm create vite@latest chess-app -- --template react-ts`
+- [X] T002 Install runtime dependencies: `npm install chess.js react-chessboard stockfish` in chess-app/
+- [X] T003 Install dev dependencies: `npm install -D tailwindcss postcss autoprefixer @testing-library/react @testing-library/jest-dom vitest jsdom @types/node` in chess-app/
+- [X] T004 [P] Configure Tailwind CSS with `npx tailwindcss init -p` and update chess-app/tailwind.config.js
+- [X] T005 [P] Configure Vitest in chess-app/vite.config.ts with jsdom environment and test setup
+- [X] T006 [P] Create test setup file in chess-app/tests/setup.ts with Testing Library configuration
+- [X] T007 Copy Stockfish WASM files to chess-app/public/stockfish/ directory (stockfish-nnue-17.1-lite-single.js and .wasm)
+- [X] T008 [P] Create TypeScript types file in chess-app/src/types/chess.ts with GameState, Move, Settings, Difficulty, AIOpponent interfaces
+- [X] T009 [P] Update chess-app/src/index.css with Tailwind directives and base styles
+- [X] T010 Create project folder structure: chess-app/src/{components,hooks,lib}/ and chess-app/tests/{unit,integration}/
 
 ---
 
@@ -45,14 +45,14 @@ Based on plan.md structure:
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T011 Implement difficulty mapping in chess-app/src/lib/difficulty.ts with ELO-to-UCI Skill Level configuration for Easy (~200), Medium (~800), Hard (~1200), Very Hard (~2000)
-- [ ] T012 Implement UCI/SAN notation utilities in chess-app/src/lib/notation.ts with move conversion functions
-- [ ] T013 Implement ChessEngine class in chess-app/src/lib/engine.ts with Web Worker wrapper for Stockfish communication
-- [ ] T014 Implement useChessEngine hook in chess-app/src/hooks/useChessEngine.ts with worker lifecycle, getBestMove, error handling
-- [ ] T015 Implement useChessGame hook in chess-app/src/hooks/useChessGame.ts with game state machine (startScreen → playerTurn → aiThinking → gameOver), chess.js integration, move validation
-- [ ] T016 [P] Create unit test for difficulty mapping in chess-app/tests/unit/difficulty.test.ts
-- [ ] T017 [P] Create unit test for notation utilities in chess-app/tests/unit/notation.test.ts
-- [ ] T018 [P] Create unit test for engine wrapper in chess-app/tests/unit/engine.test.ts
+- [X] T011 Implement difficulty mapping in chess-app/src/lib/difficulty.ts with ELO-to-UCI Skill Level configuration for Easy (~200), Medium (~800), Hard (~1200), Very Hard (~2000)
+- [X] T012 Implement UCI/SAN notation utilities in chess-app/src/lib/notation.ts with move conversion functions
+- [X] T013 Implement ChessEngine class in chess-app/src/lib/engine.ts with Web Worker wrapper for Stockfish communication
+- [X] T014 Implement useChessEngine hook in chess-app/src/hooks/useChessEngine.ts with worker lifecycle, getBestMove, error handling
+- [X] T015 Implement useChessGame hook in chess-app/src/hooks/useChessGame.ts with game state machine (startScreen → playerTurn → aiThinking → gameOver), chess.js integration, move validation
+- [X] T016 [P] Create unit test for difficulty mapping in chess-app/tests/unit/difficulty.test.ts
+- [X] T017 [P] Create unit test for notation utilities in chess-app/tests/unit/notation.test.ts
+- [X] T018 [P] Create unit test for engine wrapper in chess-app/tests/unit/engine.test.ts
 
 **Checkpoint**: Foundation ready - useChessEngine and useChessGame hooks are functional, Stockfish integration verified
 
@@ -66,17 +66,17 @@ Based on plan.md structure:
 
 ### Implementation for User Story 1
 
-- [ ] T019 [US1] Create StartScreen component in chess-app/src/components/StartScreen.tsx with difficulty selector, color choice, and Start button
-- [ ] T020 [US1] Create DifficultySelector component in chess-app/src/components/DifficultySelector.tsx with four difficulty options and player color toggle
-- [ ] T021 [US1] Create ChessBoard component in chess-app/src/components/ChessBoard.tsx wrapping react-chessboard with game state, legal move highlighting, and move handlers
-- [ ] T022 [US1] Create GameStatus component in chess-app/src/components/GameStatus.tsx displaying turn indicator, check/checkmate/stalemate/draw status
-- [ ] T023 [US1] Create PromotionSelector component in chess-app/src/components/PromotionSelector.tsx as modal for pawn promotion piece choice (queen, rook, bishop, knight)
-- [ ] T024 [US1] Wire App component in chess-app/src/App.tsx to integrate StartScreen, ChessBoard, GameStatus, and game hooks
-- [ ] T025 [US1] Implement special move validation in useChessGame hook: castling (kingside/queenside), en passant, promotion detection
-- [ ] T026 [US1] Implement game-over detection in useChessGame hook: checkmate, stalemate, draw conditions (threefold repetition, 50-move rule, insufficient material)
-- [ ] T027 [US1] Create integration test for full game flow in chess-app/tests/integration/game-flow.test.tsx covering start → moves → checkmate/draw
-- [ ] T028 [US1] Create integration test for AI response in chess-app/tests/integration/ai-response.test.tsx verifying response times per difficulty
-- [ ] T029 [US1] Create integration test for move validation in chess-app/tests/integration/move-validation.test.tsx covering illegal move rejection, special moves
+- [X] T019 [US1] Create StartScreen component in chess-app/src/components/StartScreen.tsx with difficulty selector, color choice, and Start button
+- [X] T020 [US1] Create DifficultySelector component in chess-app/src/components/DifficultySelector.tsx with four difficulty options and player color toggle
+- [X] T021 [US1] Create ChessBoard component in chess-app/src/components/ChessBoard.tsx wrapping react-chessboard with game state, legal move highlighting, and move handlers
+- [X] T022 [US1] Create GameStatus component in chess-app/src/components/GameStatus.tsx displaying turn indicator, check/checkmate/stalemate/draw status
+- [X] T023 [US1] Create PromotionSelector component in chess-app/src/components/PromotionSelector.tsx as modal for pawn promotion piece choice (queen, rook, bishop, knight)
+- [X] T024 [US1] Wire App component in chess-app/src/App.tsx to integrate StartScreen, ChessBoard, GameStatus, and game hooks
+- [X] T025 [US1] Implement special move validation in useChessGame hook: castling (kingside/queenside), en passant, promotion detection
+- [X] T026 [US1] Implement game-over detection in useChessGame hook: checkmate, stalemate, draw conditions (threefold repetition, 50-move rule, insufficient material)
+- [X] T027 [US1] Create integration test for full game flow in chess-app/tests/integration/game-flow.test.tsx covering start → moves → checkmate/draw
+- [X] T028 [US1] Create integration test for AI response in chess-app/tests/integration/ai-response.test.tsx verifying response times per difficulty
+- [X] T029 [US1] Create integration test for move validation in chess-app/tests/integration/move-validation.test.tsx covering illegal move rejection, special moves
 
 **Checkpoint**: User Story 1 complete - players can start a game, choose difficulty/color, play legal moves, receive AI responses, and reach game-over states
 
