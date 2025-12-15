@@ -90,16 +90,16 @@ Based on plan.md structure:
 
 ### Implementation for User Story 2
 
-- [ ] T030 [US2] Create GameControls component in chess-app/src/components/GameControls.tsx with New Game, Resign, Undo, Flip Board buttons
-- [ ] T031 [US2] Create MoveHistory component in chess-app/src/components/MoveHistory.tsx displaying moves in standard algebraic notation with current position highlight
-- [ ] T032 [US2] Implement undo logic in useChessGame hook: revert last full turn (player move + AI reply), update move history
-- [ ] T033 [US2] Implement resign logic in useChessGame hook: end game with AI win, update game status
-- [ ] T034 [US2] Implement new game logic in useChessGame hook: reset board, clear move history, cancel pending AI moves
-- [ ] T035 [US2] Implement flip board logic in chess-app/src/components/ChessBoard.tsx: toggle board orientation without affecting game state
-- [ ] T036 [US2] Integrate GameControls and MoveHistory into App component in chess-app/src/App.tsx
-- [ ] T037 [US2] Handle edge case: New Game during AI thinking - cancel pending AI response cleanly in useChessEngine hook
-- [ ] T038 [US2] Handle edge case: Undo immediately after checkmate/stalemate - correctly revert status in useChessGame hook
-- [ ] T039 [US2] Create integration test for game controls in chess-app/tests/integration/game-controls.test.tsx covering undo, resign, new game, flip board
+- [X] T030 [US2] Create GameControls component in chess-app/src/components/GameControls.tsx with New Game, Resign, Undo, Flip Board buttons
+- [X] T031 [US2] Create MoveHistory component in chess-app/src/components/MoveHistory.tsx displaying moves in standard algebraic notation with current position highlight
+- [X] T032 [US2] Implement undo logic in useChessGame hook: revert last full turn (player move + AI reply), update move history
+- [X] T033 [US2] Implement resign logic in useChessGame hook: end game with AI win, update game status
+- [X] T034 [US2] Implement new game logic in useChessGame hook: reset board, clear move history, cancel pending AI moves
+- [X] T035 [US2] Implement flip board logic in chess-app/src/components/ChessBoard.tsx: toggle board orientation without affecting game state
+- [X] T036 [US2] Integrate GameControls and MoveHistory into App component in chess-app/src/App.tsx
+- [X] T037 [US2] Handle edge case: New Game during AI thinking - cancel pending AI response cleanly in useChessEngine hook
+- [X] T038 [US2] Handle edge case: Undo immediately after checkmate/stalemate - correctly revert status in useChessGame hook
+- [X] T039 [US2] Create integration test for game controls in chess-app/tests/integration/game-controls.test.tsx covering undo, resign, new game, flip board
 
 **Checkpoint**: User Story 2 complete - players can control game flow and view move history
 
