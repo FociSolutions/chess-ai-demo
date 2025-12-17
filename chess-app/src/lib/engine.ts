@@ -1,5 +1,5 @@
 import type { Difficulty } from '../types/chess'
-import { getUCIOptions } from './difficulty'
+import { getUCIOptions, getDifficultyConfig } from './difficulty'
 
 export type EngineStatus = 'idle' | 'initializing' | 'ready' | 'thinking' | 'error'
 
@@ -111,8 +111,13 @@ export class ChessEngine {
       // Set position
       this.send(`position fen ${fen}`)
       
-      // Start search with movetime limit
-      this.send(`go movetime ${timeoutMs}`)
+      // Start search with depth limit (and movetime as safety ceiling)
+      const config = getDifficultyConfig(difficulty)
+      let goCommand = `go movetime ${timeoutMs}`
+      if (config.depth) {
+        goCommand += ` depth ${config.depth}`
+      }
+      this.send(goCommand)
       
       // Wait for bestmove response
       const bestMovePromise = this.waitForMessage(msg => msg.startsWith('bestmove'))
