@@ -1,10 +1,25 @@
 import type { GameState } from '../types/chess'
+import { CapturedPieces } from './CapturedPieces'
 
 interface GameStatusProps {
   gameState: GameState
+  engineError?: Error | null
 }
 
-export function GameStatus({ gameState }: GameStatusProps) {
+export function GameStatus({ gameState, engineError }: GameStatusProps) {
+  if (engineError) {
+    return (
+      <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 text-center">
+        <div className="text-red-600 dark:text-red-400 font-semibold">
+          AI Error: {engineError.message}
+        </div>
+        <div className="text-sm text-red-500 dark:text-red-300 mt-1">
+          Please try refreshing the page.
+        </div>
+      </div>
+    )
+  }
+
   const getTurnText = () => {
     if (gameState.status === 'gameOver') {
       return gameState.resultMessage || 'Game Over'
@@ -34,50 +49,36 @@ export function GameStatus({ gameState }: GameStatusProps) {
     if (gameState.isDraw) {
       return `Draw (${gameState.drawReason})`
     }
-    return ''
+    return null
   }
 
-  const getTurnAndMoveAnnouncement = () => {
-    let message = getTurnText()
-    if (gameState.isCheck) {
-      message += ' - You are in check!'
-    }
-    return message
-  }
+  const statusText = getStatusText()
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 space-y-3">
-      <div className="text-xl font-bold text-center" role="status" aria-live="polite">
-        {getTurnAndMoveAnnouncement()}
-      </div>
-      
-      {getStatusText() && (
-        <div className="text-center text-lg font-semibold text-red-600 dark:text-red-400" role="alert">
-          {getStatusText()}
-        </div>
-      )}
-      
-      <div className="text-sm text-gray-600 dark:text-gray-400 text-center">
-        Move {Math.floor(gameState.moves.length / 2) + 1}
-      </div>
-
-      {/* Captured pieces display */}
-      {gameState.capturedPieces && (gameState.capturedPieces.white.length > 0 || gameState.capturedPieces.black.length > 0) && (
-        <div className="space-y-2 border-t pt-3 mt-3">
-          {gameState.capturedPieces.black.length > 0 && (
-            <div className="text-sm">
-              <span className="font-semibold">You captured: </span>
-              <span className="text-lg">{gameState.capturedPieces.black.join(' ')}</span>
-            </div>
-          )}
-          {gameState.capturedPieces.white.length > 0 && (
-            <div className="text-sm">
-              <span className="font-semibold">AI captured: </span>
-              <span className="text-lg">{gameState.capturedPieces.white.join(' ')}</span>
-            </div>
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 border border-gray-200 dark:border-gray-700">
+      <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="flex-1">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+            {getTurnText()}
+          </h2>
+          {statusText && (
+            <p className="text-red-600 dark:text-red-400 font-semibold mt-1">
+              {statusText}
+            </p>
           )}
         </div>
-      )}
+        
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-gray-500 dark:text-gray-400 w-12">White:</span>
+            <CapturedPieces fen={gameState.fen} orientation="w" />
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-gray-500 dark:text-gray-400 w-12">Black:</span>
+            <CapturedPieces fen={gameState.fen} orientation="b" />
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

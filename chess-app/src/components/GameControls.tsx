@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { Plus, Undo2, Flag, RefreshCw } from 'lucide-react'
 import type { GameState } from '../types/chess'
 
 interface GameControlsProps {
@@ -68,59 +69,52 @@ export function GameControls({
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [canUndo, canNewGame, isGameOver, isThinking, gameState.status, onNewGame, onResign, onUndo, onFlipBoard])
 
+  const buttonClass = "p-3 rounded-lg transition-colors duration-200 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2"
+  const primaryClass = "bg-emerald-600 text-white hover:bg-emerald-700 focus:ring-emerald-500 disabled:bg-gray-300 dark:disabled:bg-gray-700 dark:disabled:text-gray-500 disabled:cursor-not-allowed"
+  const secondaryClass = "bg-gray-200 text-gray-700 hover:bg-gray-300 focus:ring-gray-400 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 dark:disabled:bg-gray-800 dark:disabled:text-gray-600"
+  const dangerClass = "bg-gray-200 text-gray-700 hover:bg-red-100 hover:text-red-600 focus:ring-red-500 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-red-900/30 dark:hover:text-red-400 dark:disabled:bg-gray-800 dark:disabled:text-gray-600"
+
   return (
-    <div className="flex flex-wrap gap-2 justify-center mt-4">
+    <div className="flex flex-wrap gap-2 justify-center mt-4 bg-white dark:bg-gray-800 p-2 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
       <button
         onClick={onNewGame}
         disabled={!canNewGame}
-        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition"
-        title="Start a new game (Ctrl+N)"
+        className={`${buttonClass} ${primaryClass}`}
+        title="New Game (Ctrl+N)"
         aria-label="New Game - keyboard shortcut Ctrl+N"
       >
-        New Game
+        <Plus size={24} />
       </button>
 
       <button
         onClick={onUndo}
         disabled={!canUndo || isThinking}
-        className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition"
-        title="Undo last full turn (Ctrl+Z)"
+        className={`${buttonClass} ${secondaryClass}`}
+        title="Undo (Ctrl+Z)"
         aria-label="Undo - keyboard shortcut Ctrl+Z"
       >
-        Undo
+        <Undo2 size={24} />
       </button>
 
       <button
         onClick={onResign}
         disabled={gameState.status === 'startScreen' || gameState.status === 'initializing'}
-        className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition"
-        title="Resign the current game (R)"
+        className={`${buttonClass} ${dangerClass}`}
+        title="Resign (R)"
         aria-label="Resign - keyboard shortcut R"
       >
-        Resign
+        <Flag size={24} />
       </button>
 
       <button
         onClick={onFlipBoard}
         disabled={gameState.status === 'startScreen'}
-        className="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition"
-        title={boardFlipped ? 'Flip board to normal orientation (F)' : 'Flip board to opposite orientation (F)'}
-        aria-label={boardFlipped ? 'Flip board - keyboard shortcut F' : 'Flip board - keyboard shortcut F'}
+        className={`${buttonClass} ${secondaryClass}`}
+        title="Flip Board (F)"
+        aria-label="Flip Board - keyboard shortcut F"
       >
-        Flip Board
+        <RefreshCw size={24} className={boardFlipped ? "rotate-180 transition-transform" : "transition-transform"} />
       </button>
-
-      {isThinking && (
-        <div className="flex items-center gap-2 px-4 py-2 bg-green-100 text-green-800 rounded">
-          <div className="w-4 h-4 border-2 border-green-500 border-t-transparent rounded-full animate-spin" />
-          AI thinking...
-        </div>
-      )}
-
-      {/* Keyboard shortcuts legend */}
-      <div className="w-full mt-4 text-xs text-gray-500 dark:text-gray-400 text-center">
-        <p>Keyboard shortcuts: Ctrl+N (New), Ctrl+Z (Undo), R (Resign), F (Flip)</p>
-      </div>
     </div>
   )
 }

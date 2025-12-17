@@ -114,9 +114,9 @@ describe('Game Controls Integration Tests', () => {
 
     await waitFor(
       () => {
-        // Look for either "Move History" heading or "No moves yet" text
-        const moveHistory = screen.queryByText('Move History')
-        const noMoves = screen.queryByText('No moves yet')
+        // Look for either "Moves" heading or "Game hasn't started" text
+        const moveHistory = screen.queryByText('Moves')
+        const noMoves = screen.queryByText("Game hasn't started")
         expect(moveHistory || noMoves).toBeTruthy()
       },
       { timeout: 10000 }

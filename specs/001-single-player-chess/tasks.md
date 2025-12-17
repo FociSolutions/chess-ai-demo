@@ -132,15 +132,29 @@ Based on plan.md structure:
 
 **Purpose**: Final refinements, documentation, and validation
 
-- [ ] T050 [P] Add loading state UI during Stockfish engine initialization in chess-app/src/components/StartScreen.tsx
-- [ ] T051 [P] Add error handling UI for AI timeout/failure in chess-app/src/components/GameStatus.tsx with user-friendly error messages
-- [ ] T052 [P] Implement responsive layout styles in chess-app/src/index.css for mobile and tablet viewports
-- [ ] T053 [P] Add illegal move feedback (visual shake or message) in chess-app/src/components/ChessBoard.tsx
-- [ ] T054 Update chess-app/README.md with setup instructions, development workflow, and architecture overview
-- [ ] T055 Create manual testing checklist in chess-app/tests/manual/checklist.md covering all acceptance scenarios from spec.md
-- [ ] T056 Run full test suite and verify all tests pass: `npm run test` in chess-app/
-- [ ] T057 Build production bundle and verify: `npm run build` in chess-app/
-- [ ] T058 Validate offline functionality: verify gameplay works without network after initial load
+- [X] T050 [P] Add loading state UI during Stockfish engine initialization in chess-app/src/components/StartScreen.tsx
+- [X] T051 [P] Add error handling UI for AI timeout/failure in chess-app/src/components/GameStatus.tsx with user-friendly error messages
+- [X] T052 [P] Implement responsive layout styles in chess-app/src/index.css for mobile and tablet viewports
+- [X] T053 [P] Add illegal move feedback (visual shake or message) in chess-app/src/components/ChessBoard.tsx
+- [X] T054 Update chess-app/README.md with setup instructions, development workflow, and architecture overview
+- [X] T055 Create manual testing checklist in chess-app/tests/manual/checklist.md covering all acceptance scenarios from spec.md
+- [X] T056 Run full test suite and verify all tests pass: `npm run test` in chess-app/
+- [X] T057 Build production bundle and verify: `npm run build` in chess-app/
+- [X] T058 Validate offline functionality: verify gameplay works without network after initial load
+
+---
+
+## Phase 7: UI/UX Improvements (Chess.com Style Polish)
+
+**Purpose**: Elevate the visual quality and user experience to match professional chess platforms.
+
+- [X] T059 [P] Install `lucide-react` and replace text buttons in `GameControls` with professional icons (Undo, Flag/Resign, Flip, Plus/New Game) with tooltips.
+- [X] T060 [P] Create `CapturedPieces` component to visualize captured material with icons and "material advantage" score (e.g., +3) in `GameStatus`.
+- [X] T061 [P] Refactor `MoveHistory` to use a structured table layout (Move # | White | Black) with scroll-to-bottom behavior and better typography.
+- [X] T062 [P] Implement `useSound` hook and add sound effects for: Move, Capture, Check, Castle, and Game Over (using free/open assets).
+- [X] T063 [P] Update `ChessBoard` theme to use professional colors (e.g., "Green" theme: #769656/#eeeed2) and ensure responsive sizing fills available space efficiently.
+- [X] T064 [P] Refine `App` layout to a strict "Board + Sidebar" grid on desktop, ensuring the board is the focal point and the sidebar (History/Controls) is fixed height.
+- [X] T065 [P] Add "Thinking" indicator directly on the board (e.g., highlighting the AI's King or a subtle progress bar) instead of just text status.
 
 ---
 

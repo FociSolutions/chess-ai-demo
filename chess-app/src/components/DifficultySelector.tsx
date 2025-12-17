@@ -23,7 +23,7 @@ export function DifficultySelector({
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-semibold mb-3">Difficulty</h3>
+        <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Difficulty</h3>
         <div className="grid grid-cols-2 gap-3">
           {difficulties.map(({ value, label, description }) => (
             <button
@@ -35,7 +35,7 @@ export function DifficultySelector({
                   : 'border-gray-300 dark:border-gray-600 hover:border-blue-300'
               }`}
             >
-              <div className="font-semibold">{label}</div>
+              <div className="font-semibold text-gray-900 dark:text-white">{label}</div>
               <div className="text-sm text-gray-600 dark:text-gray-400">{description}</div>
             </button>
           ))}
@@ -43,7 +43,7 @@ export function DifficultySelector({
       </div>
 
       <div>
-        <h3 className="text-lg font-semibold mb-3">Play as</h3>
+        <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Play as</h3>
         <div className="grid grid-cols-2 gap-3">
           <button
             onClick={() => onColorChange('w')}
@@ -53,7 +53,7 @@ export function DifficultySelector({
                 : 'border-gray-300 dark:border-gray-600 hover:border-blue-300'
             }`}
           >
-            <div className="font-semibold">White</div>
+            <div className="font-semibold text-gray-900 dark:text-white">White</div>
             <div className="text-sm text-gray-600 dark:text-gray-400">First move</div>
           </button>
           <button
@@ -64,7 +64,7 @@ export function DifficultySelector({
                 : 'border-gray-300 dark:border-gray-600 hover:border-blue-300'
             }`}
           >
-            <div className="font-semibold">Black</div>
+            <div className="font-semibold text-gray-900 dark:text-white">Black</div>
             <div className="text-sm text-gray-600 dark:text-gray-400">Second move</div>
           </button>
         </div>
