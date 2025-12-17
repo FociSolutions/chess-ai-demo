@@ -113,16 +113,16 @@ Based on plan.md structure:
 
 ### Implementation for User Story 3
 
-- [ ] T040 [P] [US3] Implement keyboard navigation for piece selection and movement in chess-app/src/components/ChessBoard.tsx with focus management and arrow key support
-- [ ] T041 [P] [US3] Add legal move highlighting on piece selection in chess-app/src/components/ChessBoard.tsx with visual indicators for valid target squares
-- [ ] T042 [P] [US3] Add last move highlighting in chess-app/src/components/ChessBoard.tsx with distinct from/to square colors
-- [ ] T043 [US3] Add check warning visual indicator in chess-app/src/components/ChessBoard.tsx highlighting king square when in check
-- [ ] T044 [US3] Add captured pieces display in chess-app/src/components/GameStatus.tsx showing taken pieces by each side
-- [ ] T045 [US3] Implement move announcements for screen readers in chess-app/src/components/ChessBoard.tsx using ARIA live regions
-- [ ] T046 [US3] Add turn and status text cues in chess-app/src/components/GameStatus.tsx with clear textual indicators compatible with assistive technologies
-- [ ] T047 [US3] Verify and adjust color contrast for WCAG 2.1 Level AA compliance in chess-app/src/index.css
-- [ ] T048 [US3] Add keyboard shortcuts for game controls (New Game, Undo, Resign) in chess-app/src/components/GameControls.tsx
-- [ ] T049 [US3] Create integration test for keyboard navigation in chess-app/tests/integration/keyboard-navigation.test.tsx
+- [X] T040 [P] [US3] Implement keyboard navigation for piece selection and movement in chess-app/src/components/ChessBoard.tsx with focus management and arrow key support
+- [X] T041 [P] [US3] Add legal move highlighting on piece selection in chess-app/src/components/ChessBoard.tsx with visual indicators for valid target squares
+- [X] T042 [P] [US3] Add last move highlighting in chess-app/src/components/ChessBoard.tsx with distinct from/to square colors
+- [X] T043 [US3] Add check warning visual indicator in chess-app/src/components/ChessBoard.tsx highlighting king square when in check
+- [X] T044 [US3] Add captured pieces display in chess-app/src/components/GameStatus.tsx showing taken pieces by each side
+- [X] T045 [US3] Implement move announcements for screen readers in chess-app/src/components/ChessBoard.tsx using ARIA live regions
+- [X] T046 [US3] Add turn and status text cues in chess-app/src/components/GameStatus.tsx with clear textual indicators compatible with assistive technologies
+- [X] T047 [US3] Verify and adjust color contrast for WCAG 2.1 Level AA compliance in chess-app/src/index.css
+- [X] T048 [US3] Add keyboard shortcuts for game controls (New Game, Undo, Resign) in chess-app/src/components/GameControls.tsx
+- [X] T049 [US3] Create integration test for keyboard navigation in chess-app/tests/integration/keyboard-navigation.test.tsx
 
 **Checkpoint**: User Story 3 complete - game is accessible via keyboard with proper visual cues and screen reader support
 

@@ -36,6 +36,61 @@ export function useChessGame() {
     gameStatusRef.current = gameState.status
   }, [gameState.status])
 
+  const getCapturedPieces = useCallback((): { white: string[]; black: string[] } => {
+    const pieceSymbols: Record<string, string> = {
+      'wr': '♖', 'br': '♜',
+      'wn': '♘', 'bn': '♞',
+      'wb': '♗', 'bb': '♝',
+      'wq': '♕', 'bq': '♛',
+      'wp': '♙', 'bp': '♟',
+    }
+    const captured = { white: [] as string[], black: [] as string[] }
+    
+    // Count pieces on board
+    const currentPieces = game.board().flat().filter(sq => sq !== null)
+    const pieceCount: Record<string, number> = {}
+    
+    currentPieces.forEach(piece => {
+      if (piece) {
+        const key = piece.color + piece.type
+        pieceCount[key] = (pieceCount[key] || 0) + 1
+      }
+    })
+    
+    // Compare with initial setup
+    const initialCount = { wp: 8, bp: 8, wn: 2, bn: 2, wb: 2, bb: 2, wr: 2, br: 2, wq: 1, bq: 1, wk: 1, bk: 1 }
+    
+    Object.entries(initialCount).forEach(([key, count]) => {
+      const current = pieceCount[key] || 0
+      const missing = count - current
+      const symbol = pieceSymbols[key]
+      const isWhiteCapture = key[0] === 'w'
+      
+      for (let i = 0; i < missing; i++) {
+        if (isWhiteCapture) {
+          captured.black.push(symbol)
+        } else {
+          captured.white.push(symbol)
+        }
+      }
+    })
+    
+    return captured
+  }, [game])
+
+  const getKingSquare = useCallback((color: 'w' | 'b'): Square | undefined => {
+    const board = game.board()
+    for (let i = 0; i < 8; i++) {
+      for (let j = 0; j < 8; j++) {
+        const piece = board[i][j]
+        if (piece && piece.type === 'k' && piece.color === color) {
+          return (String.fromCharCode(97 + j) + String(8 - i)) as Square
+        }
+      }
+    }
+    return undefined
+  }, [game])
+
   const updateGameState = useCallback((status?: GameStatus) => {
     const isCheck = game.isCheck()
     const isCheckmate = game.isCheckmate()
@@ -62,6 +117,9 @@ export function useChessGame() {
       resultMessage = `Draw: ${drawReason}`
     }
 
+    const kingSquareInCheck = isCheck ? getKingSquare(game.turn()) : undefined
+    const capturedPieces = getCapturedPieces()
+
     setGameState(prev => ({
       ...prev,
       fen: game.fen(),
@@ -73,8 +131,10 @@ export function useChessGame() {
       isDraw,
       drawReason,
       resultMessage,
+      kingSquareInCheck,
+      capturedPieces,
     }))
-  }, [game, gameState.playerColor])
+  }, [game, gameState.playerColor, getKingSquare, getCapturedPieces])
 
   const startGame = useCallback((playerColor: 'w' | 'b', selectedDifficulty: Difficulty) => {
     game.reset()
@@ -148,7 +208,7 @@ export function useChessGame() {
     }
 
     // Don't make a move if game is over
-    if (gameStatusRef.current === 'gameOver') {
+    if ((gameStatusRef.current as GameStatus) === 'gameOver') {
       return
     }
 
@@ -157,7 +217,7 @@ export function useChessGame() {
       const result = await engine.getBestMove(fen, difficulty, 5000)
       
       // Check again after async operation - user may have resigned during AI thinking
-      if (gameStatusRef.current === 'gameOver') {
+      if ((gameStatusRef.current as GameStatus) === 'gameOver') {
         return
       }
       

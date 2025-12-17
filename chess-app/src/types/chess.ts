@@ -38,6 +38,11 @@ export interface GameState {
   resultMessage: string | null
   lastMoveFrom?: Square
   lastMoveTo?: Square
+  kingSquareInCheck?: Square
+  capturedPieces?: {
+    white: string[]
+    black: string[]
+  }
 }
 
 export interface Settings {
