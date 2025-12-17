@@ -1,53 +1,58 @@
-# React + TypeScript + Vite
+# Single-Player Chess vs AI
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A browser-based chess application where users can compete against an AI opponent (Stockfish) with configurable difficulty levels.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Play against AI**: Challenge Stockfish at 4 difficulty levels (Easy, Medium, Hard, Very Hard).
+- **Full Chess Rules**: Supports all standard moves including castling, en passant, and promotion.
+- **Game Controls**: Undo moves, resign, reset game, and flip board.
+- **Move History**: View the full history of moves in standard algebraic notation.
+- **Accessibility**: Keyboard navigation, screen reader support, and high contrast compliance.
+- **Offline Capable**: Runs entirely in the browser using WebAssembly.
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Frontend**: React 18, TypeScript, Vite
+- **Styling**: Tailwind CSS
+- **Chess Logic**: chess.js
+- **Board UI**: react-chessboard
+- **AI Engine**: Stockfish 17.1 (WASM)
+- **Testing**: Vitest, React Testing Library
 
-## Expanding the ESLint configuration
+## Setup & Development
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+1.  **Install Dependencies**:
+    ```bash
+    npm install
+    ```
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+2.  **Start Development Server**:
+    ```bash
+    npm run dev
+    ```
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+3.  **Run Tests**:
+    ```bash
+    npm run test
+    ```
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+4.  **Build for Production**:
+    ```bash
+    npm run build
+    ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Architecture
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
+- **`src/components/`**: UI components (ChessBoard, GameControls, etc.)
+- **`src/hooks/`**: Custom hooks for game logic (`useChessGame`) and engine integration (`useChessEngine`).
+- **`src/lib/`**: Utilities for chess engine communication, difficulty mapping, and notation.
+- **`src/types/`**: TypeScript definitions.
+- **`public/stockfish/`**: Stockfish WebAssembly files.
+
+## License
+
+MIT
 import reactDom from 'eslint-plugin-react-dom'
 
 export default defineConfig([
