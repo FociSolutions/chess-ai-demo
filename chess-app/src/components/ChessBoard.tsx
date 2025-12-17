@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef, useMemo } from 'react'
+import { useState, useRef, useMemo } from 'react'
 import { Chessboard } from 'react-chessboard'
-import type { Square } from 'chess.js'
+import { Chess, type Square } from 'chess.js'
 import type { GameState } from '../types/chess'
 import { PromotionSelector } from './PromotionSelector'
 
@@ -18,9 +18,13 @@ export function ChessBoard({ gameState, onMove, getLegalMoves, boardFlipped = fa
     from: Square
     to: Square
   } | null>(null)
+  const [isShaking, setIsShaking] = useState(false)
   const liveRegionRef = useRef<HTMLDivElement>(null)
 
-  console.log('ChessBoard render - status:', gameState.status, 'draggable:', gameState.status === 'playerTurn')
+  const triggerShake = () => {
+    setIsShaking(true)
+    setTimeout(() => setIsShaking(false), 400)
+  }
 
   // Announce to screen readers
   const announce = (message: string) => {
@@ -54,7 +58,11 @@ export function ChessBoard({ gameState, onMove, getLegalMoves, boardFlipped = fa
 
     const legal = getLegalMoves(selectedSquare)
     if (legal.includes(square)) {
-      const isPawnPromotion =
+      const game = new Chess(gameState.fen)
+      const piece = game.get(selectedSquare)
+      const isPawn = piece && piece.type === 'p'
+      
+      const isPawnPromotion = isPawn &&
         ((selectedSquare[1] === '7' && square[1] === '8') ||
          (selectedSquare[1] === '2' && square[1] === '1'))
 
@@ -74,103 +82,37 @@ export function ChessBoard({ gameState, onMove, getLegalMoves, boardFlipped = fa
       } else {
         setSelectedSquare(null)
         announce('Illegal move')
+        triggerShake()
       }
     }
   }
 
-  // Apply custom square styles to DOM directly
-  useEffect(() => {
-    const board = document.querySelector('#chessboard-board')
-    if (!board) return
-
-    // IMPORTANT:
-    // react-chessboard paints the checkerboard via each square's inline `backgroundColor`.
-    // If we clear or overwrite `backgroundColor`, the board colors disappear.
-
-    // Reset only styles we own (leave background/backgroundColor alone)
-    const allSquares = board.querySelectorAll('[data-square]')
-    allSquares.forEach((sq) => {
-      const elem = sq as HTMLElement
-      elem.style.outline = ''
-      elem.style.outlineOffset = ''
-      elem.style.boxShadow = ''
-      elem.style.backgroundImage = ''
-      elem.style.backgroundSize = ''
-      elem.style.backgroundPosition = ''
-      elem.style.backgroundRepeat = ''
-    })
-
-    const squareShadows = new Map<string, string[]>()
-    const addShadow = (square: string, shadow: string) => {
-      const list = squareShadows.get(square) ?? []
-      list.push(shadow)
-      squareShadows.set(square, list)
-    }
-
-    // Selected square highlight (overlay without touching base backgroundColor)
-    if (selectedSquare) {
-      addShadow(selectedSquare, 'inset 0 0 0 9999px rgba(255, 255, 0, 0.35)')
-
-      // Legal move indicators (a subtle dot via background-image; keeps base color)
-      const legalMoves = getLegalMoves(selectedSquare)
-      legalMoves.forEach((square) => {
-        const targetElem = board.querySelector(`[data-square="${square}"]`) as HTMLElement
-        if (targetElem) {
-          targetElem.style.backgroundImage = 'radial-gradient(circle at center, rgba(0, 0, 0, 0.28) 0 12%, transparent 13%)'
-          targetElem.style.backgroundRepeat = 'no-repeat'
-          targetElem.style.backgroundPosition = 'center'
-          targetElem.style.backgroundSize = '100% 100%'
-        }
-      })
-    }
-
-    // Last move highlights (overlay)
-    if (gameState.lastMoveFrom && gameState.lastMoveTo) {
-      addShadow(gameState.lastMoveFrom, 'inset 0 0 0 9999px rgba(155, 199, 0, 0.28)')
-      addShadow(gameState.lastMoveTo, 'inset 0 0 0 9999px rgba(155, 199, 0, 0.28)')
-    }
-
-    // Check highlight (overlay + glow)
-    if (gameState.isCheck && gameState.kingSquareInCheck) {
-      addShadow(gameState.kingSquareInCheck, 'inset 0 0 0 9999px rgba(255, 0, 0, 0.25)')
-      addShadow(gameState.kingSquareInCheck, 'inset 0 0 10px rgba(255, 0, 0, 0.55)')
-    }
-
-    // Apply merged shadows
-    squareShadows.forEach((shadows, square) => {
-      const elem = board.querySelector(`[data-square="${square}"]`) as HTMLElement
-      if (elem) elem.style.boxShadow = shadows.join(', ')
-    })
-  }, [selectedSquare, gameState.isCheck, gameState.kingSquareInCheck, gameState.lastMoveFrom, gameState.lastMoveTo])
-
   const handlePieceDrop = (sourceSquare: string, targetSquare: string): boolean => {
-    console.log('Piece drop from', sourceSquare, '→', targetSquare, 'Status:', gameState.status)
-
     if (gameState.status !== 'playerTurn') {
-      console.log('Not player turn, returning false')
       return false
     }
 
     const legalMoves = getLegalMoves(sourceSquare as Square)
-    console.log('Legal moves from', sourceSquare, ':', legalMoves)
     
     if (!legalMoves.includes(targetSquare as Square)) {
-      console.log('Target not in legal moves, returning false')
+      triggerShake()
       return false
     }
 
     // Check if this is a promotion move
-    const isPawnPromotion =
+    const game = new Chess(gameState.fen)
+    const piece = game.get(sourceSquare as Square)
+    const isPawn = piece && piece.type === 'p'
+
+    const isPawnPromotion = isPawn &&
       ((sourceSquare[1] === '7' && targetSquare[1] === '8') ||
        (sourceSquare[1] === '2' && targetSquare[1] === '1'))
 
     if (isPawnPromotion) {
-      console.log('Pawn promotion detected')
       setPendingPromotion({ from: sourceSquare as Square, to: targetSquare as Square })
       return true
     }
 
-    console.log('Making move')
     onMove(sourceSquare as Square, targetSquare as Square)
     return true
   }
@@ -201,8 +143,78 @@ export function ChessBoard({ gameState, onMove, getLegalMoves, boardFlipped = fa
     }
   }
 
+  // Calculate custom square styles
+  const customSquareStyles = useMemo(() => {
+    const styles: Record<string, React.CSSProperties> = {}
+
+    // Last move
+    if (gameState.lastMoveFrom) {
+      styles[gameState.lastMoveFrom] = { backgroundColor: 'rgba(255, 255, 0, 0.4)' }
+    }
+    if (gameState.lastMoveTo) {
+      styles[gameState.lastMoveTo] = { backgroundColor: 'rgba(255, 255, 0, 0.4)' }
+    }
+
+    // Selected square
+    if (selectedSquare) {
+      styles[selectedSquare] = { backgroundColor: 'rgba(255, 255, 0, 0.6)' }
+      
+      // Legal moves
+      const legalMoves = getLegalMoves(selectedSquare)
+      legalMoves.forEach(move => {
+        styles[move] = {
+          background: 'radial-gradient(circle, rgba(0,0,0,.2) 25%, transparent 25%)',
+          borderRadius: '50%'
+        }
+      })
+    }
+
+    // Check
+    if (gameState.isCheck && gameState.kingSquareInCheck) {
+      styles[gameState.kingSquareInCheck] = {
+        background: 'radial-gradient(circle, rgba(255,0,0,.5) 50%, transparent 50%)',
+        borderRadius: '50%'
+      }
+    }
+
+    // AI Thinking - Highlight AI King
+    if (gameState.status === 'aiThinking') {
+      const board = gameState.fen.split(' ')[0]
+      const rows = board.split('/')
+      const targetPiece = gameState.aiColor === 'w' ? 'K' : 'k'
+      
+      let aiKingSquare: Square | null = null
+      for (let r = 0; r < 8; r++) {
+        let c = 0
+        for (const char of rows[r]) {
+          if (/\d/.test(char)) {
+            c += parseInt(char)
+          } else {
+            if (char === targetPiece) {
+              const file = String.fromCharCode(97 + c)
+              const rank = 8 - r
+              aiKingSquare = `${file}${rank}` as Square
+              break
+            }
+            c++
+          }
+        }
+        if (aiKingSquare) break
+      }
+
+      if (aiKingSquare) {
+        styles[aiKingSquare] = {
+          boxShadow: 'inset 0 0 12px 4px rgba(59, 130, 246, 0.6)', // Blue glow
+          transition: 'box-shadow 0.5s ease-in-out'
+        }
+      }
+    }
+
+    return styles
+  }, [gameState, selectedSquare, getLegalMoves])
+
   return (
-    <div className="w-full max-w-2xl">
+    <div className={`w-full ${isShaking ? 'animate-shake' : ''}`}>
       {/* Live region for screen readers */}
       <div
         ref={liveRegionRef}
@@ -224,6 +236,10 @@ export function ChessBoard({ gameState, onMove, getLegalMoves, boardFlipped = fa
             boardOrientation: boardFlipped
               ? (gameState.playerColor === 'w' ? 'black' : 'white')
               : (gameState.playerColor === 'w' ? 'white' : 'black'),
+            darkSquareStyle: { backgroundColor: '#769656' },
+            lightSquareStyle: { backgroundColor: '#eeeed2' },
+            squareStyles: customSquareStyles,
+            animationDurationInMs: 200
           }}
         />
       </div>

@@ -69,3 +69,28 @@ a:focus-visible {
   }
 }
 
+/* Responsive Board Container */
+.chess-board-responsive {
+  width: 100%;
+  max-width: 85vw; /* Mobile default */
+  aspect-ratio: 1;
+  margin: 0 auto;
+}
+
+@media (min-width: 640px) {
+  .chess-board-responsive {
+    max-width: 500px; /* Tablet/Desktop */
+  }
+}
+
+/* Shake Animation for Illegal Moves */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+  20%, 40%, 60%, 80% { transform: translateX(4px); }
+}
+
+.animate-shake {
+  animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+}
+

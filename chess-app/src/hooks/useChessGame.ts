@@ -2,6 +2,7 @@ import { useState, useCallback, useRef, useEffect } from 'react'
 import { Chess, type Square } from 'chess.js'
 import type { GameState, GameStatus, Move, Difficulty } from '../types/chess'
 import { useChessEngine } from './useChessEngine'
+import { useSound } from './useSound'
 import { parseUCI, toUCI } from '../lib/notation'
 
 const INITIAL_FEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
@@ -30,6 +31,7 @@ export function useChessGame() {
   const [pendingAIMove, setPendingAIMove] = useState<number | null>(null)
   const gameStatusRef = useRef<GameStatus>(gameState.status)
   const engine = useChessEngine()
+  const { playSound } = useSound()
 
   // Keep ref in sync with state
   useEffect(() => {
@@ -136,6 +138,20 @@ export function useChessGame() {
     }))
   }, [game, gameState.playerColor, getKingSquare, getCapturedPieces])
 
+  const playMoveSound = useCallback((moveResult: any) => {
+    if (game.isGameOver()) {
+      playSound('game-over')
+    } else if (game.isCheck()) {
+      playSound('check')
+    } else if (moveResult.captured) {
+      playSound('capture')
+    } else if (moveResult.flags.includes('k') || moveResult.flags.includes('q')) {
+      playSound('castle')
+    } else {
+      playSound('move')
+    }
+  }, [game, playSound])
+
   const startGame = useCallback((playerColor: 'w' | 'b', selectedDifficulty: Difficulty) => {
     game.reset()
     setDifficulty(selectedDifficulty)
@@ -163,6 +179,8 @@ export function useChessGame() {
       if (!result) {
         return { success: false, error: 'Illegal move' }
       }
+
+      playMoveSound(result)
 
       const move: Move = {
         san: result.san,
@@ -200,7 +218,7 @@ export function useChessGame() {
     } catch (error) {
       return { success: false, error: error instanceof Error ? error.message : 'Unknown error' }
     }
-  }, [game, gameState.status, updateGameState])
+  }, [game, gameState.status, updateGameState, playMoveSound])
 
   const makeAIMove = useCallback(async () => {
     if (!engine.isReady) {
@@ -227,6 +245,8 @@ export function useChessGame() {
       if (!moveResult) {
         throw new Error('AI made illegal move')
       }
+
+      playMoveSound(moveResult)
 
       const move: Move = {
         san: moveResult.san,
@@ -263,7 +283,7 @@ export function useChessGame() {
       setPendingAIMove(null)
       updateGameState('gameOver')
     }
-  }, [game, engine, difficulty, updateGameState])
+  }, [game, engine, difficulty, updateGameState, playMoveSound])
 
   const getLegalMoves = useCallback((square?: Square): Square[] => {
     if (!square) {
