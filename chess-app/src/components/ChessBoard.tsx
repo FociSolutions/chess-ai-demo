@@ -1,7 +1,7 @@
 import { useState, useRef, useMemo } from 'react'
 import { Chessboard } from 'react-chessboard'
 import { Chess, type Square } from 'chess.js'
-import type { GameState } from '../types/chess'
+import type { GameState, ThemeColors } from '../types/chess'
 import { PromotionSelector } from './PromotionSelector'
 
 interface ChessBoardProps {
@@ -10,9 +10,10 @@ interface ChessBoardProps {
   getLegalMoves: (square?: Square) => Square[]
   boardFlipped?: boolean
   onAnnounce?: (message: string) => void
+  themeColors?: ThemeColors
 }
 
-export function ChessBoard({ gameState, onMove, getLegalMoves, boardFlipped = false, onAnnounce }: ChessBoardProps) {
+export function ChessBoard({ gameState, onMove, getLegalMoves, boardFlipped = false, onAnnounce, themeColors }: ChessBoardProps) {
   const [selectedSquare, setSelectedSquare] = useState<Square | null>(null)
   const [pendingPromotion, setPendingPromotion] = useState<{
     from: Square
@@ -236,8 +237,8 @@ export function ChessBoard({ gameState, onMove, getLegalMoves, boardFlipped = fa
             boardOrientation: boardFlipped
               ? (gameState.playerColor === 'w' ? 'black' : 'white')
               : (gameState.playerColor === 'w' ? 'white' : 'black'),
-            darkSquareStyle: { backgroundColor: '#769656' },
-            lightSquareStyle: { backgroundColor: '#eeeed2' },
+            darkSquareStyle: { backgroundColor: themeColors?.dark ?? '#769656' },
+            lightSquareStyle: { backgroundColor: themeColors?.light ?? '#eeeed2' },
             squareStyles: customSquareStyles,
             animationDurationInMs: 200
           }}

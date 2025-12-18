@@ -1,15 +1,17 @@
 import { useState } from 'react'
 import { DifficultySelector } from './DifficultySelector'
-import type { Difficulty } from '../types/chess'
+import { BoardThemeSelector } from './BoardThemeSelector'
+import type { Difficulty, BoardTheme } from '../types/chess'
 
 interface StartScreenProps {
-  onStartGame: (difficulty: Difficulty, playerColor: 'w' | 'b') => void
+  onStartGame: (difficulty: Difficulty, playerColor: 'w' | 'b', theme: BoardTheme) => void
   engineReady: boolean
 }
 
 export function StartScreen({ onStartGame, engineReady }: StartScreenProps) {
   const [difficulty, setDifficulty] = useState<Difficulty>('medium')
   const [color, setColor] = useState<'w' | 'b'>('w')
+  const [theme, setTheme] = useState<BoardTheme>('green')
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 p-4">
@@ -31,8 +33,15 @@ export function StartScreen({ onStartGame, engineReady }: StartScreenProps) {
           onColorChange={setColor}
         />
 
+        <div className="mt-6">
+          <BoardThemeSelector
+            selectedTheme={theme}
+            onThemeChange={setTheme}
+          />
+        </div>
+
         <button
-          onClick={() => onStartGame(difficulty, color)}
+          onClick={() => onStartGame(difficulty, color, theme)}
           disabled={!engineReady}
           className="w-full mt-8 py-4 bg-blue-600 text-white rounded-lg font-semibold text-lg hover:bg-blue-700 disabled:bg-gray-400 dark:disabled:bg-gray-700 dark:disabled:text-gray-500 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
         >

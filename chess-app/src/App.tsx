@@ -1,10 +1,12 @@
+import { useState } from 'react'
 import { useChessGame } from './hooks/useChessGame'
 import { StartScreen } from './components/StartScreen'
 import { ChessBoard } from './components/ChessBoard'
 import { GameStatus } from './components/GameStatus'
 import { GameControls } from './components/GameControls'
 import { MoveHistory } from './components/MoveHistory'
-import type { Difficulty } from './types/chess'
+import { THEME_COLORS } from './lib/boardThemes'
+import type { Difficulty, BoardTheme } from './types/chess'
 import type { Square } from 'chess.js'
 
 function App() {
@@ -22,7 +24,10 @@ function App() {
     engineError,
   } = useChessGame()
 
-  const handleStartGame = (difficulty: Difficulty, playerColor: 'w' | 'b') => {
+  const [boardTheme, setBoardTheme] = useState<BoardTheme>('green')
+
+  const handleStartGame = (difficulty: Difficulty, playerColor: 'w' | 'b', theme: BoardTheme) => {
+    setBoardTheme(theme)
     startGame(playerColor, difficulty)
   }
 
@@ -70,6 +75,7 @@ function App() {
               onMove={handleMove}
               getLegalMoves={getLegalMoves}
               boardFlipped={boardFlipped}
+              themeColors={THEME_COLORS[boardTheme]}
             />
           </div>
           <GameControls

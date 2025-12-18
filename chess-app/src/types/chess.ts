@@ -2,6 +2,13 @@ import type { Square } from 'chess.js'
 
 export type Difficulty = 'easy' | 'medium' | 'hard' | 'veryHard'
 
+export type BoardTheme = 'green' | 'blue' | 'brown'
+
+export interface ThemeColors {
+  dark: string
+  light: string
+}
+
 export type GameStatus =
   | 'initializing'
   | 'startScreen'
